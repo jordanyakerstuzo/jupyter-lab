@@ -6,21 +6,17 @@ To get started with a local environment, simply execute the `run` task that is i
 
 ## Connecting to Databases via StrongDM
 
-As mentioned in the [Docker Documentation](https://docs.docker.com/desktop/mac/networking/#i-want-to-connect-from-a-container-to-a-service-on-the-host), in order to connect to a host, you simply need to specify `host.docker.internal` and the port as shown below:
+The project has been configured not only with a number of example notebooks, but also comes with a library of helper functions that make connecting to any database a simple exercise.  Simply start a Spark session and use the `get_postgres_table` function as shown below:
 
 ```
-from pyspark.sql import SparkSession
+from lib.database import get_postgres_table
+from lib.spark import get_spark_session
 
-spark = SparkSession \
-    .builder \
-    .appName("OpenCommerce") \
-    .config("spark.jars", "/ext/lib/postgresql-42.3.4.jar") \
-    .getOrCreate()
+spark = get_spark_session()
+sc = spark.sparkContext
 
-df = spark.read \
-    .format("jdbc") \
-    .option("url", "jdbc:postgresql://host.docker.internal:9037/activate_rule_production?user=postgres") \
-    .option("driver", "org.postgresql.Driver") \
-    .option("dbtable", "actions") \
-    .load()
+df = get_postgres_table(database="activate_core_production",
+                        partition_col="transaction_time_at",
+                        port=9037,
+                        table="transactions")
 ```
