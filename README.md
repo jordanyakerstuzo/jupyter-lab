@@ -2,7 +2,7 @@
 
 This is a quick Docker setup that allows the running of Jupyter notebooks in a managed environment.
 
-To get started with a local environment, simply run the `up` task that is included in the Makefile.
+To get started with a local environment, simply execute the `run` task that is included in the Makefile.
 
 ## Connecting to Databases via StrongDM
 

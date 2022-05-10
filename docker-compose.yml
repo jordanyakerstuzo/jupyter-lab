@@ -1,0 +1,96 @@
+version: "2.2"
+services:
+  driver:
+    image: jupyter/all-spark-notebook
+    hostname: driver
+    environment:
+      MASTER: spark://driver:7077
+      SPARK_CONF_DIR: /conf
+      SPARK_PUBLIC_DNS: localhost
+      SPARK_OPTS: --driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M
+    command: spark-class org.apache.spark.deploy.master.Master
+    expose:
+    - 7001
+    - 7002
+    - 7003
+    - 7004
+    - 7005
+    - 7006
+    mem_limit: 4g
+    cpus: 1
+    ports:
+    - 6066:6066
+    - 7077:7077
+    - 8080:8080
+    volumes:
+      - ./docker/driver/conf:/conf
+      - ./data/driver:/tmp/data
+
+  executor_1:
+    image: jupyter/all-spark-notebook
+    environment:
+      SPARK_CONF_DIR: /conf
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 4G
+      SPARK_WORKER_PORT: 8881
+      SPARK_WORKER_WEBUI_PORT: 8181
+      SPARK_PUBLIC_DNS: localhost
+    command: spark-class org.apache.spark.deploy.worker.Worker -d ~/work spark://driver:7077
+    depends_on:
+      - driver
+    expose:
+    - 7012
+    - 7013
+    - 7014
+    - 7015
+    - 8181
+    - 8881
+    ports:
+    - 8181:8181
+    mem_limit: 4g
+    cpus: 2
+    volumes:
+      - ./docker/executor/conf:/conf
+      - ./data/executor:/tmp/data
+
+  executor_2:
+    image: jupyter/all-spark-notebook
+    environment:
+      SPARK_CONF_DIR: /conf
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 4G
+      SPARK_WORKER_PORT: 8881
+      SPARK_WORKER_WEBUI_PORT: 8281
+      SPARK_PUBLIC_DNS: localhost
+    command: spark-class org.apache.spark.deploy.worker.Worker -d ~/work spark://driver:7077
+    depends_on:
+      - driver
+    expose:
+    - 7012
+    - 7013
+    - 7014
+    - 7015
+    - 8281
+    - 8881
+    ports:
+      - 8281:8281
+    mem_limit: 4g
+    cpus: 2
+    volumes:
+      - ./docker/executor/conf:/conf
+      - ./data/executor:/tmp/data
+
+  jupyter:
+    image: jupyter/all-spark-notebook
+    environment:
+      MASTER: spark://driver:7077
+      SPARK_PUBLIC_DNS: localhost
+      SPARK_OPTS: ""
+    command: start.sh jupyter lab --LabApp.token=''
+    ports:
+      - 4040:4040
+      - 8888:8888
+    mem_limit: 4g
+    cpus: 1
+    volumes:
+      - ./notebooks:/home/jovyan/work
