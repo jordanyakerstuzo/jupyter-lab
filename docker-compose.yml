@@ -25,6 +25,7 @@ services:
     volumes:
       - ./docker/driver/conf:/conf
       - ./data/driver:/tmp/data
+      - ~/.aws/credentials:/home/jovyan/.aws/credentials
 
   executor_1:
     image: jupyter/all-spark-notebook
@@ -52,6 +53,7 @@ services:
     volumes:
       - ./docker/executor/conf:/conf
       - ./data/executor:/tmp/data
+      - ~/.aws/credentials:/home/jovyan/.aws/credentials
 
   executor_2:
     image: jupyter/all-spark-notebook
@@ -79,6 +81,7 @@ services:
     volumes:
       - ./docker/executor/conf:/conf
       - ./data/executor:/tmp/data
+      - ~/.aws/credentials:/home/jovyan/.aws/credentials
 
   jupyter:
     image: jupyter/all-spark-notebook
@@ -94,3 +97,4 @@ services:
     cpus: 1
     volumes:
       - ./notebooks:/home/jovyan/work
+      - ~/.aws/credentials:/home/jovyan/.aws/credentials

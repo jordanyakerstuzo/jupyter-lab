@@ -53,3 +53,9 @@ df = get_postgres_table(database="activate_core_production",
                         port=9037,
                         table="transactions")
 ```
+
+## Connecting to S3 via Leapp
+
+The Docker Compose services and the Spark sessions have been configured to seamlessly integrate with your AWS credentials file (i.e., `~/.aws/credentials`) in order to authenticate to S3. Because of this, all session credentials created via Leapp will be accessible within your local Spark envirnment allowing you to connect to any number of AWS environments.
+
+**NOTE:** when connecting to a new environment or renewing your existing credentials, it may be necessary to restart your Jupyter Kernel to detect the new credentials.

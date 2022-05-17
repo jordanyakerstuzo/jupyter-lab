@@ -11,11 +11,15 @@ SESSION_DEFAULT_CONF = {
     "spark.sql.adaptive.advisoryPartitionSizeInBytes": "128m",
     "spark.sql.adaptive.coalescePartitions.minPartitionSize": "2",
     "spark.sql.adaptive.coalescePartitions.initialPartitionNum": "2",
-    "spark.sql.adaptive.coalescePartitions.enabled": "true"
+    "spark.sql.adaptive.coalescePartitions.enabled": "true",
+    "fs.s3a.aws.credentials.provider": "com.amazonaws.auth.DefaultAWSCredentialsProviderChain"
 }
 
 SPARK_DEFAULT_PACKAGES = [
-    "org.postgresql:postgresql:42.3.5"
+    "org.postgresql:postgresql:42.3.5",
+    "org.apache.hadoop:hadoop-aws:3.3.1",
+    "com.databricks:spark-xml_2.12:0.14.0"
+
 ]
 
 def get_spark_session(config: Dict[str, str] = None, driver = "spark://driver:7077",
