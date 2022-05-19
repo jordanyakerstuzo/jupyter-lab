@@ -1,2 +1,4 @@
+delta-spark
 pandas
 pyarrow
+virtualenv
